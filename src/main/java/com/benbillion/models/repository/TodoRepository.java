@@ -1,6 +1,6 @@
-package com.benbillion.repository;
+package com.benbillion.models.repository;
 
-import com.benbillion.models.Todo;
+import com.benbillion.models.data.Todo;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

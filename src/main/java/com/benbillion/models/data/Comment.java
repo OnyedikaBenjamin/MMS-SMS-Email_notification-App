@@ -1,8 +1,7 @@
-package com.benbillion.models;
+package com.benbillion.models.data;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import lombok.Data;
 
