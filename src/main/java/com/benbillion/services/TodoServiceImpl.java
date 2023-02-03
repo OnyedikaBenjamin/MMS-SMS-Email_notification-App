@@ -9,6 +9,8 @@ import exceptions.GenericHandlerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 @Service
@@ -23,6 +25,9 @@ public class TodoServiceImpl implements TodoService {
         Todo todo = new Todo();
         todo.setBody(createTodoRequest.getBody());
         todo.setTitle(createTodoRequest.getTitle());
+        try {
+            todo.setTIME_TO_BE_EXECUTED(new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").parse(createTodoRequest.getDateAndTime()));
+        }catch (GenericHandlerException | ParseException ignored){}
         todoRepository.save(todo);
         CreateTodoResponse response = new CreateTodoResponse();
         response.setMessage("Category Successfully Created");

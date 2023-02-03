@@ -44,7 +44,6 @@ public class Controller {
                 .build();
         return new ResponseEntity<>(apiResponse, HttpStatus.ACCEPTED);
     }
-
     @PostMapping("/finished/{id}")
     public ResponseEntity<?> markAsDone(@PathVariable Long id, HttpServletRequest httpServletRequest){
         String todo = todoService.markAsDone(id);
