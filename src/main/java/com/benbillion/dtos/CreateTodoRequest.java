@@ -11,7 +11,7 @@ public class CreateTodoRequest {
     private String title;
     private String Body;
     private Status todoStatus = Status.NotExecuted;
-    private Date TIME_TO_BE_EXECUTED;
     private String dateAndTime = "dd/MM/yyyy HH:mm:ss";
+    private Date TIME_TO_BE_EXECUTED;
     private final ZonedDateTime TIME_CREATED = ZonedDateTime.now();
 }
