@@ -23,43 +23,54 @@ public class TodoServiceImpl implements TodoService {
     @Override
     public CreateTodoResponse addTodo(CreateTodoRequest createTodoRequest) {
         Todo todo = new Todo();
+        todo.setId(createTodoRequest.getId());
         todo.setBody(createTodoRequest.getBody());
         todo.setTitle(createTodoRequest.getTitle());
-        try {
-            todo.setTIME_TO_BE_EXECUTED(new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").parse(createTodoRequest.getDateAndTime()));
-        }catch (GenericHandlerException | ParseException ignored){
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+            try {
+                todo.setTimeOfExecution(formatter.parse(createTodoRequest.getStringSnippetOfDateAndTimeToBeExecuted()));
+            } catch (IllegalArgumentException | ParseException e) {
             throw new RuntimeException(
-                    "Invalid date and time format" +
-                            "Please use this format dd/MM/yyyy HH:mm:ss");
-        }
+                    "Invalid date and time" +
+                            "Please use this format '2000-12-18 03:57:11' ");
+            }
         todoRepository.save(todo);
         CreateTodoResponse response = new CreateTodoResponse();
-        response.setMessage("Category Successfully Created");
+        response.setMessage("Todo Successfully Created");
         return response;
     }
     @Override
     public UpdateTodoResponse editTask(UpdateTodoRequest updateTodoRequest, Long id) {
         Todo toBeUpdated = todoRepository.findById(id)
-                .orElseThrow(() -> new GenericHandlerException("Todo with id "+id+" does not exist"));
+                .orElseThrow(() -> new GenericHandlerException("Todo with id " + id + " does not exist"));
         toBeUpdated.setTitle(updateTodoRequest.getTitle());
         toBeUpdated.setBody(updateTodoRequest.getBody());
-        toBeUpdated.setTIME_TO_BE_EXECUTED(updateTodoRequest.getTIME_TO_BE_EXECUTED());
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        try {
+            toBeUpdated.setTimeOfExecution(formatter.parse(updateTodoRequest.getStringSnippetOfDateAndTimeToBeExecuted()));
+        } catch (IllegalArgumentException | ParseException e) {
+            throw new RuntimeException(
+                    "Invalid date and time" +
+                            "Please use this format '2000-12-18 03:57:11' ");
+        }
         todoRepository.save(toBeUpdated);
         UpdateTodoResponse response = new UpdateTodoResponse();
-        response.setMessage("Category Successfully Created");
+        response.setMessage("Todo Successfully Updated");
         return response;
     }
     @Override
     public String markAsDone(Long id) {
-        // firstly, add to the list of finished task and then delete.
         Todo query  = todoRepository.findById(id)
                 .orElseThrow(() -> new GenericHandlerException("Todo with queried id "+id+" cannot be found"));
         FinishedTodo finishedTodo = new FinishedTodo();
+        finishedTodo.setId(query.getId());
         finishedTodo.setTitle(query.getTitle());
         finishedTodo.setBody(query.getBody());
+        finishedTodo.setTimeCreated(query.getTIME_CREATED());
         finishedTodo.setComments(query.getComments());
         finishedTodoRepo.save(finishedTodo);
-       todoService.deleteTodo(query.getId());
+
+        todoService.deleteTodo(query.getId());
         return "Successful";
     }
     @Override
@@ -76,6 +87,16 @@ public class TodoServiceImpl implements TodoService {
                 .orElseThrow(() -> new GenericHandlerException("Finished Todo with id "+id+" does not exist"));
     }
     @Override
+    public String deleteAllTodo() {
+        todoRepository.deleteAll();
+        return "All todos have been cleared successfully";
+    }
+    @Override
+    public String deleteAllFinishedTodo() {
+        finishedTodoRepo.deleteAll();
+        return "Successful";
+    }
+    @Override
     public DeleteTodoResponse deleteTodo(Long id) {
         todoRepository.deleteById(id);
         DeleteTodoResponse response = new DeleteTodoResponse();
@@ -87,6 +108,5 @@ public class TodoServiceImpl implements TodoService {
         finishedTodoRepo.deleteById(id);
         return "Deleted Successfully";
     }
-
 
 }

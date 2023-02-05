@@ -5,24 +5,19 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import lombok.Data;
-import java.time.ZonedDateTime;
+
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
-
 @Data
 @Entity
 public class Todo {
     @Id private Long id;
     private String title;
-    private String Body;
+    private String body;
     private Status status = Status.NotExecuted;
-    private final ZonedDateTime TIME_CREATED = ZonedDateTime.now();
-    private String dateAndTime = "02/02/2023 13:30:00";
-    private Date TIME_TO_BE_EXECUTED = new Date();
+    private final LocalDateTime TIME_CREATED = LocalDateTime.now();
+    private Date timeOfExecution;
     @OneToMany
     private List<Comment> comments;
-
-
-
-
 }

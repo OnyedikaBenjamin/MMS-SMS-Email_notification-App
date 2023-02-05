@@ -116,8 +116,29 @@ public class Controller {
                 .build();
         return new ResponseEntity<>(apiResponse, HttpStatus.ACCEPTED);
     }
-
-
-
+    @DeleteMapping("/all/finished")
+    public ResponseEntity<?> deleteAllFinishedTodo(HttpServletRequest httpServletRequest){
+        String response = todoService.deleteAllFinishedTodo();
+        ApiResponse apiResponse = ApiResponse.builder()
+                .timeStamp(ZonedDateTime.now())
+                .data(response)
+                .path(httpServletRequest.getRequestURI())
+                .statusCode(HttpStatus.OK.value())
+                .isSuccessful(true)
+                .build();
+        return new ResponseEntity<>(apiResponse, HttpStatus.ACCEPTED);
+    }
+    @DeleteMapping("/all")
+    public ResponseEntity<?> deleteAllTodos(HttpServletRequest httpServletRequest){
+        String response = todoService.deleteAllTodo();
+        ApiResponse apiResponse = ApiResponse.builder()
+                .timeStamp(ZonedDateTime.now())
+                .data(response)
+                .path(httpServletRequest.getRequestURI())
+                .statusCode(HttpStatus.OK.value())
+                .isSuccessful(true)
+                .build();
+        return new ResponseEntity<>(apiResponse, HttpStatus.ACCEPTED);
+    }
 
 }

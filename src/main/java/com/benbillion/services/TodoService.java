@@ -14,4 +14,8 @@ public interface TodoService {
     List<Todo> viewAllTodo();
     List<FinishedTodo> viewAllFinishedTodo();
     FinishedTodo findFinishedTodoById(Long id);
+
+    String deleteAllTodo();
+
+    String deleteAllFinishedTodo();
 }

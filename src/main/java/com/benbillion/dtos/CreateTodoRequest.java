@@ -1,17 +1,12 @@
 package com.benbillion.dtos;
 
-import com.benbillion.enums.Status;
+import jakarta.persistence.Id;
 import lombok.Data;
-import java.time.ZonedDateTime;
-import java.util.Date;
 
 @Data
 public class CreateTodoRequest {
-
+    @Id private Long id;
     private String title;
     private String Body;
-    private Status todoStatus = Status.NotExecuted;
-    private String dateAndTime = "dd/MM/yyyy HH:mm:ss";
-    private Date TIME_TO_BE_EXECUTED;
-    private final ZonedDateTime TIME_CREATED = ZonedDateTime.now();
+    private String StringSnippetOfDateAndTimeToBeExecuted;
 }
