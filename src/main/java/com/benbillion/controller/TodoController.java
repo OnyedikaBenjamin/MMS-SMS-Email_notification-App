@@ -1,7 +1,7 @@
 package com.benbillion.controller;
 
 import com.benbillion.dtos.*;
-import com.benbillion.models.data.FinishedTodo;
+import com.benbillion.models.data.Comment;
 import com.benbillion.models.data.Todo;
 import com.benbillion.services.TodoService;
 import com.benbillion.utils.ApiResponse;
@@ -16,7 +16,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(path = "api/v1/todo")
-public class Controller {
+public class TodoController {
     @Autowired
     TodoService todoService;
 
@@ -44,19 +44,8 @@ public class Controller {
                 .build();
         return new ResponseEntity<>(apiResponse, HttpStatus.ACCEPTED);
     }
-    @PostMapping("/finished/{id}")
-    public ResponseEntity<?> markAsDone(@PathVariable Long id, HttpServletRequest httpServletRequest){
-        String todo = todoService.markAsDone(id);
-        ApiResponse apiResponse = ApiResponse.builder()
-                .timeStamp(ZonedDateTime.now())
-                .data(todo)
-                .path(httpServletRequest.getRequestURI())
-                .statusCode(HttpStatus.OK.value())
-                .isSuccessful(true)
-                .build();
-        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
-    }
-    @GetMapping("/todos")
+
+    @GetMapping("/all")
     public ResponseEntity<?> viewAllTodos(HttpServletRequest httpServletRequest){
         List<Todo> list = todoService.viewAllTodo();
         ApiResponse apiResponse = ApiResponse.builder()
@@ -68,31 +57,20 @@ public class Controller {
                 .build();
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
-    @GetMapping("/finished")
-    public ResponseEntity<?> viewAllFinishedTodos(HttpServletRequest httpServletRequest){
-        List<FinishedTodo> list = todoService.viewAllFinishedTodo();
+    @GetMapping("/comments/{todoId}")
+    public ResponseEntity<?> viewComments(HttpServletRequest httpServletRequest, @PathVariable Long todoId){
+        List<Comment> allComments = todoService.showTodoComments(todoId);
         ApiResponse apiResponse = ApiResponse.builder()
                 .timeStamp(ZonedDateTime.now())
-                .data(list)
+                .data(allComments)
                 .path(httpServletRequest.getRequestURI())
                 .statusCode(HttpStatus.OK.value())
                 .isSuccessful(true)
                 .build();
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
-    @GetMapping("/todos/{id}")
-    public ResponseEntity<?> findFinishedTodoById(@PathVariable Long id, HttpServletRequest httpServletRequest){
-        FinishedTodo todo = todoService.findFinishedTodoById(id);
-        ApiResponse apiResponse = ApiResponse.builder()
-                .timeStamp(ZonedDateTime.now())
-                .data(todo)
-                .path(httpServletRequest.getRequestURI())
-                .statusCode(HttpStatus.OK.value())
-                .isSuccessful(true)
-                .build();
-        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
-    }
-    @DeleteMapping("/todos/{todoId}")
+
+    @DeleteMapping("/delete/{todoId}")
     public ResponseEntity<?> deleteTodo(@PathVariable Long todoId, HttpServletRequest httpServletRequest){
         DeleteTodoResponse todo = todoService.deleteTodo(todoId);
         ApiResponse apiResponse = ApiResponse.builder()
@@ -104,31 +82,8 @@ public class Controller {
                 .build();
         return new ResponseEntity<>(apiResponse, HttpStatus.ACCEPTED);
     }
-    @DeleteMapping("/todos/{id}")
-    public ResponseEntity<?> deleteFinishedTodo(@PathVariable Long id, HttpServletRequest httpServletRequest){
-        String todo = todoService.deleteFinishedTodo(id);
-        ApiResponse apiResponse = ApiResponse.builder()
-                .timeStamp(ZonedDateTime.now())
-                .data(todo)
-                .path(httpServletRequest.getRequestURI())
-                .statusCode(HttpStatus.OK.value())
-                .isSuccessful(true)
-                .build();
-        return new ResponseEntity<>(apiResponse, HttpStatus.ACCEPTED);
-    }
-    @DeleteMapping("/all/finished")
-    public ResponseEntity<?> deleteAllFinishedTodo(HttpServletRequest httpServletRequest){
-        String response = todoService.deleteAllFinishedTodo();
-        ApiResponse apiResponse = ApiResponse.builder()
-                .timeStamp(ZonedDateTime.now())
-                .data(response)
-                .path(httpServletRequest.getRequestURI())
-                .statusCode(HttpStatus.OK.value())
-                .isSuccessful(true)
-                .build();
-        return new ResponseEntity<>(apiResponse, HttpStatus.ACCEPTED);
-    }
-    @DeleteMapping("/all")
+
+    @DeleteMapping("/delete/all")
     public ResponseEntity<?> deleteAllTodos(HttpServletRequest httpServletRequest){
         String response = todoService.deleteAllTodo();
         ApiResponse apiResponse = ApiResponse.builder()

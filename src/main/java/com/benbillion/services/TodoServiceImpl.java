@@ -1,9 +1,9 @@
 package com.benbillion.services;
 
 import com.benbillion.dtos.*;
-import com.benbillion.models.data.FinishedTodo;
+import com.benbillion.models.data.Comment;
 import com.benbillion.models.data.Todo;
-import com.benbillion.models.repository.FinishedTodoRepo;
+import com.benbillion.models.repository.CommentRepository;
 import com.benbillion.models.repository.TodoRepository;
 import exceptions.GenericHandlerException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,15 +13,20 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
+
 @Service
 public class TodoServiceImpl implements TodoService {
     @Autowired
     TodoRepository todoRepository;
-    FinishedTodoRepo finishedTodoRepo;
-    TodoService todoService;
+    @Autowired
+    CommentRepository commentRepository;
 
     @Override
     public CreateTodoResponse addTodo(CreateTodoRequest createTodoRequest) {
+        if(todoRepository.findAll().stream()
+                .anyMatch(todo-> todo.getId().equals(createTodoRequest.getId()))){
+            throw new GenericHandlerException("Todo with ID " +createTodoRequest.getId()+ " already exists");
+        }
         Todo todo = new Todo();
         todo.setId(createTodoRequest.getId());
         todo.setBody(createTodoRequest.getBody());
@@ -58,55 +63,44 @@ public class TodoServiceImpl implements TodoService {
         response.setMessage("Todo Successfully Updated");
         return response;
     }
-    @Override
-    public String markAsDone(Long id) {
-        Todo query  = todoRepository.findById(id)
-                .orElseThrow(() -> new GenericHandlerException("Todo with queried id "+id+" cannot be found"));
-        FinishedTodo finishedTodo = new FinishedTodo();
-        finishedTodo.setId(query.getId());
-        finishedTodo.setTitle(query.getTitle());
-        finishedTodo.setBody(query.getBody());
-        finishedTodo.setTimeCreated(query.getTIME_CREATED());
-        finishedTodo.setComments(query.getComments());
-        finishedTodoRepo.save(finishedTodo);
 
-        todoService.deleteTodo(query.getId());
-        return "Successful";
-    }
     @Override
     public List<Todo> viewAllTodo() {
         return todoRepository.findAll();
     }
-    @Override
-    public List<FinishedTodo> viewAllFinishedTodo() {
-        return finishedTodoRepo.findAll();
-    }
-    @Override
-    public FinishedTodo findFinishedTodoById(Long id) {
-        return finishedTodoRepo.findById(id)
-                .orElseThrow(() -> new GenericHandlerException("Finished Todo with id "+id+" does not exist"));
-    }
+
     @Override
     public String deleteAllTodo() {
+        commentRepository.deleteAll();
         todoRepository.deleteAll();
         return "All todos have been cleared successfully";
     }
     @Override
-    public String deleteAllFinishedTodo() {
-        finishedTodoRepo.deleteAll();
-        return "Successful";
+    public List<Comment> showTodoComments(Long todoId) {
+//
+//        for(Comment comment : commentRepository.findAll()){
+//            if(comment.getTodo().equals(todoRepository.findById(todoId))){
+//
+//            }
+//        }
+        return commentRepository.findByTodoId(todoId);
     }
     @Override
     public DeleteTodoResponse deleteTodo(Long id) {
-        todoRepository.deleteById(id);
+        Todo queriedTodo = todoRepository.findById(id)
+                .orElseThrow(()-> new GenericHandlerException("Todo with queried Id does not exist"));
+        commentRepository.deleteAll(commentRepository.findByTodoId(id));
+        todoRepository.delete(queriedTodo);
+
         DeleteTodoResponse response = new DeleteTodoResponse();
         response.setMessage("Todo deleted Successfully");
         return response;
     }
+
     @Override
-    public String deleteFinishedTodo(Long id) {
-        finishedTodoRepo.deleteById(id);
-        return "Deleted Successfully";
+    public Todo viewTodo(Long id) {
+        return todoRepository.findById(id)
+                .orElseThrow(()-> new GenericHandlerException("Todo with queried id does not exist"));
     }
 
 }

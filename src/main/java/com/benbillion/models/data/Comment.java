@@ -1,19 +1,20 @@
 package com.benbillion.models.data;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import lombok.Data;
 
 import java.time.LocalDateTime;
 
 @Data
 @Entity
+@Table(name = "comments")
 public class Comment {
-    @Id private Long id;
+    @Id
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    private Long id;
     private String body;
-    private LocalDateTime time;
+    private final LocalDateTime TIME_CREATED = LocalDateTime.now();
     @ManyToOne
+    @JoinColumn
    private Todo todo;
-
 }
