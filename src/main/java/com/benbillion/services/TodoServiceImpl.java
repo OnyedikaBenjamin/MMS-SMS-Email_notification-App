@@ -45,7 +45,8 @@ public class TodoServiceImpl implements TodoService {
         return response;
     }
     @Override
-    public UpdateTodoResponse editTask(UpdateTodoRequest updateTodoRequest, Long id) {
+    public UpdateTodoResponse editTask(UpdateTodoRequest updateTodoRequest,
+                                       Long id) {
         Todo toBeUpdated = todoRepository.findById(id)
                 .orElseThrow(() -> new GenericHandlerException("Todo with id " + id + " does not exist"));
         toBeUpdated.setTitle(updateTodoRequest.getTitle());
@@ -77,12 +78,6 @@ public class TodoServiceImpl implements TodoService {
     }
     @Override
     public List<Comment> showTodoComments(Long todoId) {
-//
-//        for(Comment comment : commentRepository.findAll()){
-//            if(comment.getTodo().equals(todoRepository.findById(todoId))){
-//
-//            }
-//        }
         return commentRepository.findByTodoId(todoId);
     }
     @Override

@@ -20,7 +20,9 @@ public class CommentController {
         CommentService commentService;
 
         @PostMapping("/create/{todoId}")
-        public ResponseEntity<?> createComment(@PathVariable Long todoId, @RequestBody CreateCommentRequest createCommentRequest, HttpServletRequest httpServletRequest){
+        public ResponseEntity<?> createComment(@PathVariable Long todoId,
+                                               @RequestBody CreateCommentRequest createCommentRequest,
+                                               HttpServletRequest httpServletRequest){
             String CreateResponse = commentService.createComment(todoId, createCommentRequest);
             ApiResponse apiResponse = ApiResponse.builder()
                     .timeStamp(ZonedDateTime.now())
@@ -32,7 +34,10 @@ public class CommentController {
             return new ResponseEntity<>(apiResponse, HttpStatus.ACCEPTED);
         }
         @PutMapping("/edit/{todoId}/{commentId}")
-        public ResponseEntity<?> editComment(@PathVariable Long todoId, @PathVariable Long commentId, @RequestBody EditCommentRequest editCommentRequest, HttpServletRequest httpServletRequest){
+        public ResponseEntity<?> editComment(@PathVariable Long todoId,
+                                             @PathVariable Long commentId,
+                                             @RequestBody EditCommentRequest editCommentRequest,
+                                             HttpServletRequest httpServletRequest){
             String editResponse = commentService.editComment(todoId, commentId, editCommentRequest);
             ApiResponse apiResponse = ApiResponse.builder()
                     .timeStamp(ZonedDateTime.now())
@@ -58,7 +63,9 @@ public class CommentController {
         }
 
         @DeleteMapping("/delete/{todoId}/{commentId}")
-        public ResponseEntity<?> deleteComment(@PathVariable Long todoId, @PathVariable Long commentId, HttpServletRequest httpServletRequest){
+        public ResponseEntity<?> deleteComment(@PathVariable Long todoId,
+                                               @PathVariable Long commentId,
+                                               HttpServletRequest httpServletRequest){
             String deleteResponse = commentService.deleteComment(todoId, commentId);
             ApiResponse apiResponse = ApiResponse.builder()
                     .timeStamp(ZonedDateTime.now())

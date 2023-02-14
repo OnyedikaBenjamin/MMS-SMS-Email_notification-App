@@ -3,6 +3,7 @@ package com.benbillion.controller;
 import com.benbillion.dtos.*;
 import com.benbillion.models.data.Comment;
 import com.benbillion.models.data.Todo;
+import com.benbillion.services.EmailSenderService;
 import com.benbillion.services.TodoService;
 import com.benbillion.utils.ApiResponse;
 import jakarta.servlet.http.HttpServletRequest;
@@ -19,6 +20,8 @@ import java.util.List;
 public class TodoController {
     @Autowired
     TodoService todoService;
+    @Autowired
+    EmailSenderService emailSenderService;
 
     @PostMapping("/add")
     public ResponseEntity<?> addTodo(@RequestBody CreateTodoRequest createTodoRequest, HttpServletRequest httpServletRequest){
@@ -31,6 +34,21 @@ public class TodoController {
                 .isSuccessful(true)
                 .build();
         return new ResponseEntity<>(apiResponse, HttpStatus.ACCEPTED);
+    }
+    @PostMapping("/mail")
+    public String sendMail(@RequestBody String toEmail,
+                           String subject,
+                           String body, HttpServletRequest httpServletRequest){
+        return emailSenderService.sendEmail(toEmail, subject, body);
+
+//        ApiResponse apiResponse = ApiResponse.builder()
+//                .timeStamp(ZonedDateTime.now())
+//                .data(mail)
+//                .path(httpServletRequest.getRequestURI())
+//                .statusCode(HttpStatus.OK.value())
+//                .isSuccessful(true)
+//                .build();
+//        return new ResponseEntity<>(apiResponse, HttpStatus.ACCEPTED);
     }
     @PutMapping("/edit/{id}")
     public ResponseEntity<?> editTask(@PathVariable Long id, @RequestBody UpdateTodoRequest updateTodoRequest, HttpServletRequest httpServletRequest){

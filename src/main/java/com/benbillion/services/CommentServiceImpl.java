@@ -23,7 +23,8 @@ public class CommentServiceImpl implements CommentService {
     CommentRepository commentRepo;
 
     @Override
-    public String createComment(Long todoId, CreateCommentRequest createCommentRequest) {
+    public String createComment(Long todoId,
+                                CreateCommentRequest createCommentRequest) {
         Comment comment = new Comment();
         Todo queriedTodo = todoRepository.findById(todoId)
                 .orElseThrow(() -> new GenericHandlerException("Todo queried does not exist"));
@@ -38,7 +39,9 @@ public class CommentServiceImpl implements CommentService {
         return "Comment successfully created";
     }
     @Override
-    public String editComment(Long todoId, Long commentId, EditCommentRequest editCommentRequest) {
+    public String editComment(Long todoId,
+                              Long commentId,
+                              EditCommentRequest editCommentRequest) {
         Todo queriedTodo = todoRepository.findById(todoId)
                 .orElseThrow(() -> new GenericHandlerException("Todo queried does not exist"));
         for(Comment comment : queriedTodo.getComments()){
@@ -60,7 +63,8 @@ public class CommentServiceImpl implements CommentService {
         return new ArrayList<>(repoComments);
     }
     @Override
-    public String deleteComment(Long todoId, Long commentId) {
+    public String deleteComment(Long todoId,
+                                Long commentId) {
         Todo queriedTodo = todoRepository.findById(todoId)
                 .orElseThrow(() -> new GenericHandlerException("Todo queried does not exist"));
 //        Comment commentToDelete = queriedTodo.getComments().stream()

@@ -19,7 +19,8 @@ public class FinishedTodoController {
     FinishedTodoService finishedTodoService;
 
     @PostMapping("/add/{id}")
-    public ResponseEntity<?> markAsDone(@PathVariable Long id, HttpServletRequest httpServletRequest){
+    public ResponseEntity<?> markAsDone(@PathVariable Long id,
+                                        HttpServletRequest httpServletRequest){
         String todo = finishedTodoService.markAsDone(id);
         ApiResponse apiResponse = ApiResponse.builder()
                 .timeStamp(ZonedDateTime.now())
@@ -45,7 +46,8 @@ public class FinishedTodoController {
     }
 
     @GetMapping("/view/{id}")
-    public ResponseEntity<?> findFinishedTodoById(@PathVariable Long id, HttpServletRequest httpServletRequest){
+    public ResponseEntity<?> findFinishedTodoById(@PathVariable Long id,
+                                                  HttpServletRequest httpServletRequest){
         FinishedTodo todo = finishedTodoService.findFinishedTodoById(id);
         ApiResponse apiResponse = ApiResponse.builder()
                 .timeStamp(ZonedDateTime.now())
@@ -58,7 +60,8 @@ public class FinishedTodoController {
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<?> deleteFinishedTodo(@PathVariable Long id, HttpServletRequest httpServletRequest){
+    public ResponseEntity<?> deleteFinishedTodo(@PathVariable Long id,
+                                                HttpServletRequest httpServletRequest){
         String todo = finishedTodoService.deleteFinishedTodo(id);
         ApiResponse apiResponse = ApiResponse.builder()
                 .timeStamp(ZonedDateTime.now())
