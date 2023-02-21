@@ -18,11 +18,15 @@ import java.util.List;
 @RestController
 @RequestMapping(path = "api/v1/todo")
 public class TodoController {
-    @Autowired
-    TodoService todoService;
-    @Autowired
-    EmailSenderService emailSenderService;
+    private TodoService todoService;
 
+//    private EmailSenderService emailSenderService;
+
+    public TodoController(TodoService todoService,
+                          EmailSenderService emailSenderService){
+        this.todoService=todoService;
+//        this.emailSenderService=emailSenderService;
+    }
     @PostMapping("/add")
     public ResponseEntity<?> addTodo(@RequestBody CreateTodoRequest createTodoRequest, HttpServletRequest httpServletRequest){
         CreateTodoResponse todo = todoService.addTodo(createTodoRequest);
@@ -35,11 +39,11 @@ public class TodoController {
                 .build();
         return new ResponseEntity<>(apiResponse, HttpStatus.ACCEPTED);
     }
-    @PostMapping("/mail")
-    public String sendMail(@RequestBody String toEmail,
-                           String subject,
-                           String body, HttpServletRequest httpServletRequest){
-        return emailSenderService.sendEmail(toEmail, subject, body);
+//    @PostMapping("/mail")
+//    public void sendMail(@RequestBody String toEmail,
+//                         String subject,
+//                         String body){
+//        emailSenderService.sendMail(subject, body);
 
 //        ApiResponse apiResponse = ApiResponse.builder()
 //                .timeStamp(ZonedDateTime.now())
@@ -49,7 +53,7 @@ public class TodoController {
 //                .isSuccessful(true)
 //                .build();
 //        return new ResponseEntity<>(apiResponse, HttpStatus.ACCEPTED);
-    }
+//    }
     @PutMapping("/edit/{id}")
     public ResponseEntity<?> editTask(@PathVariable Long id, @RequestBody UpdateTodoRequest updateTodoRequest, HttpServletRequest httpServletRequest){
         UpdateTodoResponse todo = todoService.editTask(updateTodoRequest, id);

@@ -29,6 +29,7 @@ public class FinishedTodoImpl implements FinishedTodoService {
         finishedTodo.setComments(query.getComments());
         finishedTodoRepo.save(finishedTodo);
 
+
         todoService.deleteTodo(query.getId());
         return "Successful";
     }

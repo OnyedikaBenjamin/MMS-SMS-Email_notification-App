@@ -8,17 +8,16 @@ import org.springframework.context.event.EventListener;
 
 @SpringBootApplication
 public class TodoApplication {
-	@Autowired
-	EmailSenderService senderService;
 
 	public static void main(String[] args) {
 		SpringApplication.run(TodoApplication.class, args);
 	}
-	@EventListener(ApplicationReadyEvent.class)
-	public void sendMail(){
-		senderService.sendEmail("benbillion62@gmail.com",
-				"Interview From Digerati", "You are highly welcome");
-	}
+//	@EventListener(ApplicationReadyEvent.class)
+//	public String sendMail(){
+//		senderService.sendMail("benbillion62@gmail.com",
+//				"Interview From Digerati");
+//		return "Mail sent successfully";
+//	}
 
 }
 

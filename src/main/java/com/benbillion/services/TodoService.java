@@ -2,10 +2,8 @@ package com.benbillion.services;
 
 import com.benbillion.dtos.*;
 import com.benbillion.models.data.Comment;
-import com.benbillion.models.data.FinishedTodo;
 import com.benbillion.models.data.Todo;
 import java.util.List;
-import java.util.Optional;
 
 public interface TodoService {
     CreateTodoResponse addTodo(CreateTodoRequest createTodoRequest);
