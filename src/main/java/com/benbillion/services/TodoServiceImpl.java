@@ -2,44 +2,32 @@ package com.benbillion.services;
 
 import com.benbillion.dtos.*;
 import com.benbillion.models.data.Comment;
-import com.benbillion.models.data.Email;
 import com.benbillion.models.data.Todo;
 import com.benbillion.models.repository.CommentRepository;
-import com.benbillion.models.repository.EmailRepository;
 import com.benbillion.models.repository.TodoRepository;
 import exceptions.GenericHandlerException;
 import org.springframework.stereotype.Service;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class TodoServiceImpl implements TodoService {
     private final TodoRepository todoRepository;
     private final CommentRepository commentRepository;
     private final EmailSenderService emailSenderService;
-    private EmailRepository emailRepository;
-    private Email email;
 
     public TodoServiceImpl(TodoRepository todoRepository,
                            CommentRepository commentRepository,
-                           EmailSenderService emailSenderService,
-                           EmailRepository emailRepository
+                           EmailSenderService emailSenderService
     ) {
         this.commentRepository = commentRepository;
         this.todoRepository = todoRepository;
         this.emailSenderService = emailSenderService;
-        this.emailRepository = emailRepository;
     }
 
     @Override
     public CreateTodoResponse addTodo(CreateTodoRequest createTodoRequest) {
-//        if (todoRepository.findAll().stream()
-//                .anyMatch(todo -> todo.getId().equals(createTodoRequest.getId()))) {
-//            throw new GenericHandlerException("Todo with ID " + createTodoRequest.getId() + " already exists");
-//        }
         Todo todo = new Todo();
         todo.setId(createTodoRequest.getId());
         todo.setBody(createTodoRequest.getBody());
@@ -51,7 +39,7 @@ public class TodoServiceImpl implements TodoService {
         } catch (IllegalArgumentException | ParseException e) {
             throw new RuntimeException(
                     "Invalid date and time" +
-                            "Please use this format '2000-12-18 03:57:11' ");
+                            "Please use this format '2023-02-29 03:57:11' ");
         }
         todoRepository.save(todo);
 
@@ -59,7 +47,7 @@ public class TodoServiceImpl implements TodoService {
             try {
                 emailSenderService.sendCreatedTodoMail();
             } catch (GenericHandlerException | ArrayIndexOutOfBoundsException message) {
-                throw new GenericHandlerException("Please try again");
+                throw new GenericHandlerException("There is no reminder Mail found");
             }
 
         }

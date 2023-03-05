@@ -34,7 +34,7 @@ public class EmailController {
     }
     @PostMapping("/send")
     public ResponseEntity<?> sendCreatedTodoMail(HttpServletRequest httpServletRequest) {
-        String email = emailSenderService.sendCreatedTodoMail();
+         String email = emailSenderService.sendCreatedTodoMail();
         ApiResponse apiResponse = ApiResponse.builder()
                 .timeStamp(ZonedDateTime.now())
                 .data(email)

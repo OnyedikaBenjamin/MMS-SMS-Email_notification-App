@@ -1,7 +1,6 @@
 package com.benbillion.controller;
 
 import com.benbillion.dtos.OTPVerificationRequest;
-import com.benbillion.dtos.ReminderMailRequest;
 import com.benbillion.services.OTPService;
 import com.benbillion.utils.ApiResponse;
 import jakarta.servlet.http.HttpServletRequest;

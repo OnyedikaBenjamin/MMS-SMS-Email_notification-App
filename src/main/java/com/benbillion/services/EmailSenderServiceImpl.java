@@ -1,6 +1,5 @@
 package com.benbillion.services;
 
-import com.benbillion.dtos.CreatedTodoMailRequest;
 import com.benbillion.dtos.OTPVerificationRequest;
 import com.benbillion.models.data.Email;
 import com.benbillion.models.repository.EmailRepository;
@@ -29,9 +28,15 @@ public class EmailSenderServiceImpl implements EmailSenderService {
         this.emailRepository=emailRepository;
     }
 
-    // 3 TYPES OF MAILS ARE GONNA BE SENT HERE, CREATED TODO MAIL,
-    //  OTP MAIL, AND REMINDER MAILS.
-    @Async
+    public boolean isValidEmail(String email) {
+        String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\."+"[a-zA-Z0-9_+&*-]+)*@"+"(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
+        Pattern pattern = Pattern.compile(emailRegex);
+        if (email == null)
+            return false;
+        return pattern.matcher(email).matches();
+    }
+
+    @Async          //  wait for the OTpMail to be sent before any other execution
     @Override
     public String sendCreatedTodoMail() {
         try {
@@ -57,7 +62,31 @@ public class EmailSenderServiceImpl implements EmailSenderService {
 
     @Async
     @Override
-    public String sendOTPVerificationMail(OTPVerificationRequest otpVerificationRequest) {
+    public void sendReminderMail(String text) {
+        try {
+            Email existingEmail = emailRepository.findAll().get(0);
+            Email email = new Email();
+            MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+            MimeMessageHelper message = new MimeMessageHelper(mimeMessage, "utf-8");
+            message.setTo(existingEmail.getReminderEmail());
+            message.setSubject("Task Reminder");
+//            message.setText(buildEmail(), true);
+            message.setText(text);
+            message.setFrom("digeratees@gmail.com");
+            javaMailSender.send(mimeMessage);
+        }
+        catch (MessagingException | MailException e) {
+            log.info("problem2: ");
+            log.info(e.getMessage());
+            throw new RuntimeException("Please add an email for reminder");
+        }
+    }
+
+
+
+    @Async
+    @Override
+    public void sendOTPVerificationMail(OTPVerificationRequest otpVerificationRequest) {
         try {
             MimeMessage mimeMessage = javaMailSender.createMimeMessage();
             MimeMessageHelper message = new MimeMessageHelper(mimeMessage, "utf-8");
@@ -73,16 +102,9 @@ public class EmailSenderServiceImpl implements EmailSenderService {
             log.info(e.getMessage());
             throw new RuntimeException(e);
         }
-        return "successful";
     }
 
-    public boolean isValidEmail(String email) {
-        String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\."+"[a-zA-Z0-9_+&*-]+)*@"+"(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
-        Pattern pattern = Pattern.compile(emailRegex);
-        if (email == null)
-            return false;
-        return pattern.matcher(email).matches();
-    }
+
 
     @Override
     public String registerEmail(OTPVerificationRequest createEmailRequest) {

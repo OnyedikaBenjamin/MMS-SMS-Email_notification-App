@@ -23,9 +23,13 @@ public class VerificationOTP {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String otp;
-    private LocalDateTime otpVerifiedAt;
+    private LocalDateTime createdAt;
+    private LocalDateTime expiredAt;
+    private LocalDateTime usedAt;
 
-    public VerificationOTP(String otp) {
+    public VerificationOTP(String otp, LocalDateTime createdAt, LocalDateTime expiredAt) {
         this.otp = otp;
+        this.createdAt=createdAt;
+        this.expiredAt=expiredAt;
     }
 }
