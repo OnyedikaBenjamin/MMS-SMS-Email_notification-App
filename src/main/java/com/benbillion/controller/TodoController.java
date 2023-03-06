@@ -39,21 +39,7 @@ public class TodoController {
                 .build();
         return new ResponseEntity<>(apiResponse, HttpStatus.ACCEPTED);
     }
-//    @PostMapping("/mail")
-//    public void sendMail(@RequestBody String toEmail,
-//                         String subject,
-//                         String body){
-//        emailSenderService.sendMail(subject, body);
 
-//        ApiResponse apiResponse = ApiResponse.builder()
-//                .timeStamp(ZonedDateTime.now())
-//                .data(mail)
-//                .path(httpServletRequest.getRequestURI())
-//                .statusCode(HttpStatus.OK.value())
-//                .isSuccessful(true)
-//                .build();
-//        return new ResponseEntity<>(apiResponse, HttpStatus.ACCEPTED);
-//    }
     @PutMapping("/edit/{id}")
     public ResponseEntity<?> editTask(@PathVariable Long id, @RequestBody UpdateTodoRequest updateTodoRequest, HttpServletRequest httpServletRequest){
         UpdateTodoResponse todo = todoService.editTask(updateTodoRequest, id);

@@ -1,6 +1,7 @@
 package com.benbillion.services;
 
 import com.benbillion.dtos.*;
+import com.benbillion.enums.Status;
 import com.benbillion.models.data.Comment;
 import com.benbillion.models.data.Todo;
 import com.benbillion.models.repository.CommentRepository;
@@ -32,8 +33,9 @@ public class TodoServiceImpl implements TodoService {
         todo.setId(createTodoRequest.getId());
         todo.setBody(createTodoRequest.getBody());
         todo.setTitle(createTodoRequest.getTitle());
+        todo.setStatus(Status.NotExecuted);
         todo.setSendMeReminderMail(createTodoRequest.getSendMeReminderMail());
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         try {
             todo.setTimeOfExecution(formatter.parse(createTodoRequest.getStringSnippetOfDateAndTimeToBeExecuted()));
         } catch (IllegalArgumentException | ParseException e) {
@@ -43,7 +45,7 @@ public class TodoServiceImpl implements TodoService {
         }
         todoRepository.save(todo);
 
-        if (createTodoRequest.getSendMeReminderMail().equals("yes".toUpperCase())) {
+        if (createTodoRequest.getSendMeReminderMail().equalsIgnoreCase("yes")) {
             try {
                 emailSenderService.sendCreatedTodoMail();
             } catch (GenericHandlerException | ArrayIndexOutOfBoundsException message) {

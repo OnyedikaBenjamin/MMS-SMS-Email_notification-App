@@ -21,20 +21,13 @@ public class TwentyFourHoursDueTask {
     @Id
     private Long id;
     private String title;
-    private String body;
     private Status status = Status.NotExecuted;
     private final LocalDateTime TIME_CREATED = LocalDateTime.now();
-    private Date timeOfExecution;
-    @OneToMany
-    private List<Comment> comments;
-    private String sendMeReminderMail;
+    private Date timeOfExecution;private String sendMeReminderMail;
 
-    public TwentyFourHoursDueTask(Long id, String title, String body, Status status, Date timeOfExecution, List<Comment> comments, String sendMeReminderMail) {
+    public TwentyFourHoursDueTask(Long id, String title, Date timeOfExecution, String sendMeReminderMail) {
         this.title = title;
-        this.body = body;
-        this.status = status;
         this.timeOfExecution = timeOfExecution;
-        this.comments = comments;
         this.sendMeReminderMail = sendMeReminderMail;
         this.id = id;
     }
